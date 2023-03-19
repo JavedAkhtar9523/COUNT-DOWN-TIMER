@@ -1,25 +1,43 @@
-import logo from './logo.svg';
+import {useEffect, useState} from 'react'
 import './App.css';
 
 function App() {
+  const [time,setTime] = useState(0);
+
+  const handleKeyDown=(e)=>{
+    if(e.key === 'Enter'){
+      const inputTime = Math.floor(e.target.value);
+      if(isNaN(inputTime)){
+        setTime(0);
+      } else{
+        setTime(inputTime)
+      }
+    }
+  }
+  useEffect(()=>{
+    let intervalId;
+    if(time>0){
+      intervalId = setInterval(()=>{
+        setTime((prevTime)=>   prevTime-1)
+      },1000)
+    }else{
+      setTime(0)
+    }
+    return ()=> clearInterval(intervalId)
+  } ,[time])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <>
+    <div>
+      <h1>Count Down Timer</h1>
+      <label htmlFor='timecount'>Time Count :- </label>
+      <input id="timecount" onKeyDown={handleKeyDown} placeholder="Enter the time count"/>
+      <div id="current-time">Timer          : {time}</div>
     </div>
+    <h4>NOTE:- After giving Input please press "Enter"</h4>
+
+    </>
   );
 }
 
 export default App;
+
